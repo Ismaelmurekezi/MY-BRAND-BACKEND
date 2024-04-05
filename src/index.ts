@@ -2,7 +2,9 @@ import express from "express";
 import mongoose from "mongoose";
 import dotenv from 'dotenv';
 import route from "./route/blogRoute";
-import upload from "../multer";
+import upload from "./multer";
+import router from "./route/userRoute";
+
 
 
 const app = express();
@@ -26,5 +28,6 @@ mongoose.connect(MONGOURL).then(() => {
         console.log(error)
 })
     app.use("/api/blog", route);
+    app.use("/api/user", router);
 
 

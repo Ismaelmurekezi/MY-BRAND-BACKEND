@@ -1,4 +1,4 @@
-import uploader from "../../cloudinary";
+import uploader from "../cloudinary";
 import Blog from "../model/blogModel";
 import { Request, Response } from "express";
 
@@ -48,24 +48,7 @@ export const fetch = async (req:Request, res:Response) => {
   }
 };
 
-//Update blog 
 
-// export const update = async (req:Request, res:Response) => {
-//   try {
-//     const id = req.params.id;
-//     const blogExist = await Blog.findOne({ _id: id });
-//     if (!blogExist) {
-//       return res.status(404).json({ message: "Blog Not found" });
-//     }
-
-//     const updateBlog = await Blog.findByIdAndUpdate(id, req.body, {
-//       new: true,
-//     });
-//     res.status(201).json(updateBlog);
-//   } catch (error) {
-//     res.status(500).json({ error: "Internal server error" });
-//   }
-// };
 // Update blog
 export const update = async (req: Request, res: Response) => {
   try {
@@ -75,7 +58,7 @@ export const update = async (req: Request, res: Response) => {
       return res.status(404).json({ message: "Blog Not found" });
     }
 
-    let updateData = req.body; // Copy the request body
+    let updateData = req.body; 
 
     if (req.file) {
       // Upload image to Cloudinary if a new file is provided
