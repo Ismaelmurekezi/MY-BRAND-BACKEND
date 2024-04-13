@@ -19,8 +19,8 @@ const uploader = async (file:any, res:any) => {
       console.log(error)
       return res.status(400).json({
        message: error,
-      });
+      });                 
     }
   };
 
- export default uploader
+export default uploader;

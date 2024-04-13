@@ -2,12 +2,17 @@ import express from "express";
 import mongoose from "mongoose";
 import dotenv from 'dotenv';
 import route from "./route/blogRoute";
-import upload from "../multer";
+import upload from "./multer";
+import router from "./route/userRoute";
+import cookieParser from "cookie-parser";
+
+
 
 
 const app = express();
 app.use(express.json());
 app.use(upload.single('image'))
+app.use(cookieParser()); // Add cookie-parser middleware
 // app.use('api/blog',route)
 
 
@@ -25,6 +30,9 @@ mongoose.connect(MONGOURL).then(() => {
 })   .catch(error => {
         console.log(error)
 })
-    app.use("/api/blog", route);
+
+app.use("/api/blog", route);
+app.use("/api/user", router);
+
 
 

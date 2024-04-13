@@ -1,4 +1,8 @@
+
 import mongoose from "mongoose";
+import User from "../model/userModel"
+
+
 
 const blogSchema = new mongoose.Schema({
   subject: {
@@ -24,11 +28,56 @@ const blogSchema = new mongoose.Schema({
   caption: {
     type: String,
     required:true
-    },
-    image: {
+  },
+  image: {
     type: String,
     required:true
-  }
+  },
+    likes: {
+    type: Number,
+    default: 0
+  },
+  // comments: [commentSchema]
+    comments: [
+    {
+      user: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "User",
+        },
+        userEmail: {
+    type: String,
+  },
+  
+      text: {
+        type: String,
+        required: true,
+      },
+      createdAt: {
+        type: Date,
+        default: Date.now,
+      },
+    },
+  ],
 });
 
-export default mongoose.model("blogs", blogSchema);
+export default mongoose.model("Blog", blogSchema);
+
+
+
+// const commentSchema = new mongoose.Schema({
+//   user: {
+//     type: mongoose.Schema.Types.ObjectId,
+//     ref: "User",
+//   },
+//   text: {
+//     type: String,
+//     required: true,
+//   },
+//   createdAt: {
+//     type: Date,
+//     default: Date.now,
+//   },
+//   userEmail: {
+//     type: String,
+//   },
+// });
