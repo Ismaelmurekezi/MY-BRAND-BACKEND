@@ -50,7 +50,7 @@ const blogSchema = new mongoose.Schema({
   
       text: {
         type: String,
-        required: true,
+        required: false,
       },
       createdAt: {
         type: Date,
