@@ -99,7 +99,7 @@ export const deleteUser = async (req:Request, res:Response) => {
 
 
 
-
+//Adding comment to blog post
 
 
 export const addComment = async (req: Request, res: Response) => {
@@ -142,6 +142,46 @@ export const addComment = async (req: Request, res: Response) => {
     res.status(500).json({ error: "Internal server error" });
   }
 };
+
+
+
+
+export const likeBlog = async (req: Request, res: Response) => {
+  try {
+    const userId = (req as any).user._id; // Assuming user data is in req.user
+    const blogId = req.params.blogId;
+
+    // Find the blog post by ID
+    const blog = await Blog.findById(blogId);
+
+    if (!blog) {
+      return res.status(404).json({ message: "Blog post not found" });
+    }
+
+    // Check if user already liked the post
+    const alreadyLiked = blog.likedBy.includes(userId);
+
+    if (alreadyLiked) {
+      
+      // Removing like 
+      blog.likedBy = blog.likedBy.filter(id => id.toString() !== userId.toString());
+      blog.likes > 0 ? blog.likes--:blog.likes=0; 
+    } else {
+      // Add user ID to likedBy array
+      blog.likedBy.push(userId);
+      blog.likes++; // Increment likes count
+    }
+
+    // Save the updated blog post
+    const updatedBlog = await blog.save();
+
+    res.status(200).json({ message: alreadyLiked ? "Unliked" : "Liked", blog: updatedBlog });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: "Internal server error" });
+  }
+};
+
 
 
 
