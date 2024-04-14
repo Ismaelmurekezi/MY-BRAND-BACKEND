@@ -9,6 +9,7 @@ import jwt from "jsonwebtoken";
 const ACCESS_TOKEN: string = process.env.ACCESS_TOKEN || "";
 const REFRESH_TOKEN_SECRET: string = process.env.REFRESH_TOKEN_SECRET || "";
 
+
 // Function to generate refresh token
 const generateRefreshToken = (user: any) => {
   return jwt.sign({ id: user._id }, REFRESH_TOKEN_SECRET, { expiresIn: "1d" });
