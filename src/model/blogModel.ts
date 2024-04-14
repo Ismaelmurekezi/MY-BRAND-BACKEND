@@ -34,9 +34,15 @@ const blogSchema = new mongoose.Schema({
     required:true
   },
     likes: {
-    type: Number,
-    default: 0
+  type: Number,
+  default: 0
+},
+likedBy: [
+  {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: "User",
   },
+],
   // comments: [commentSchema]
     comments: [
     {
@@ -64,3 +70,4 @@ export default mongoose.model("Blog", blogSchema);
 
 
 
+ main
