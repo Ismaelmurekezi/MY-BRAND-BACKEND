@@ -7,6 +7,7 @@ const ACCESS_TOKEN_SECRET: string = process.env.ACCESS_TOKEN || "";
 
 export const authenticateUser = (req: Request, res: Response, next: NextFunction) => {
   const accessToken = req.headers.authorization?.split(" ")[1];
+    // const accessToken = req.cookies.access_token;
 
   if (!accessToken) {
     return res.status(401).json({ message: "Access token not provided" });

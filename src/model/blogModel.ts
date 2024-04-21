@@ -52,8 +52,10 @@ likedBy: [
         },
         userEmail: {
     type: String,
-  },
-  
+        },
+    username: {
+    type: String,
+      },
       text: {
         type: String,
         required: false,
@@ -64,10 +66,12 @@ likedBy: [
       },
     },
   ],
+          createdAt: {
+        type: Date,
+        default: Date.now,
+      }
 });
 
 export default mongoose.model("Blog", blogSchema);
 
 
-
- main
