@@ -15,29 +15,37 @@ const generateRefreshToken = (user: any) => {
   return jwt.sign({ id: user._id }, REFRESH_TOKEN_SECRET, { expiresIn: "1d" });
 };
 
-// User registration
+//USER REGISTRATION FUNCTION
+
 export const register = async (req: Request, res: Response) => {
   try {
-    const { username, email, password } = req.body;
+    const { username, email, password, confirmPassword } = req.body;
+    
+    if (password !== confirmPassword) {
+      return res.status(400).json({ message: "Password and Confirm Password do not match" });
+    }
+
     const hashedPassword = bcrypt.hashSync(password, 10);
+
+    // Create the user
     const userData = await User.create({
       username: username,
       email: email,
       password: hashedPassword,
+
     });
 
-    if (userData) {
-      const accessToken = jwt.sign({ data: userData }, ACCESS_TOKEN, { expiresIn: "1h" });
-      const refreshToken = generateRefreshToken(userData);
+    // Generate tokens
+    const accessToken = jwt.sign({ data: userData }, ACCESS_TOKEN, { expiresIn: "3m" });
+    const refreshToken = generateRefreshToken(userData);
 
-      // Set access token in HTTP-only cookie
-      res.cookie("access_token", accessToken, { httpOnly: true });
-       res.cookie("refresh_token", refreshToken, { httpOnly: true });
+    // Set access token in HTTP-only cookie
+    res.cookie("access_token", accessToken, { httpOnly: true });
+    res.cookie("refresh_token", refreshToken, { httpOnly: true });
 
-      res.json({ message: "register successfully ", token: accessToken, refresh_token: refreshToken });
-    }
+    res.json({ message: "Registered successfully", token: accessToken, refresh_token: refreshToken });
   } catch (error: any) {
-    res.json({ message: error.message });
+    res.status(500).json({ message: error.message });
   }
 };
 
@@ -45,20 +53,20 @@ export const register = async (req: Request, res: Response) => {
 export const login = async (req: Request, res: Response) => {
   try {
     const { email, password } = req.body;
-    const existUser = await User.findOne({ email: email });
+    const existUser = await User.findOne({ email: email});
 
     if (existUser) {
       const checkPassword = bcrypt.compareSync(password, existUser.password);
 
       if (checkPassword) {
-        const accessToken = jwt.sign({ data: existUser }, ACCESS_TOKEN, { expiresIn: "1h" });
+        const accessToken = jwt.sign({ data: existUser }, ACCESS_TOKEN, { expiresIn: "3m" });
         const refreshToken = generateRefreshToken(existUser);
 
         // Set access token in HTTP-only cookie
         res.cookie("access_token", accessToken, { httpOnly: true });
          res.cookie("refresh_token", refreshToken, { httpOnly: true });
 
-        return res.json({ message: `Welcome back: ${existUser.username}`, token: accessToken, refresh_token: refreshToken });
+        return res.json({ message: `Welcome back: ${existUser.username}`,email, token: accessToken, refresh_token: refreshToken });
       } else {
       
         return res.status(401).json({ message: "Invalid password" });
@@ -77,9 +85,26 @@ export const login = async (req: Request, res: Response) => {
 
 
 
+// User logout
+export const logout = async (req: Request, res: Response) => {
+  try {
+    // Clear the access token cookie
+    res.clearCookie("access_token");
+    res.clearCookie("refresh_token");
+
+    return res.json({ message: "Logout successful" });
+  } catch (error: any) {
+    console.error(error);
+    return res.status(500).json({ error: "Internal server error" });
+  }
+};
+
+
+
+
 // Function to generate access token
  const generateAccessToken = (user: any) => {
-  return jwt.sign({ data: user }, ACCESS_TOKEN, { expiresIn: '1h' });
+  return jwt.sign({ data: user }, ACCESS_TOKEN, { expiresIn: '3m' });
 };
 
 export const refreshToken = async (req: Request, res: Response) => {

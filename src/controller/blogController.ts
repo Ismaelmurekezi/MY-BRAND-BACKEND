@@ -54,6 +54,31 @@ export const fetch = async (req:Request, res:Response) => {
 
 
 
+// Controller function to fetch a single blog post by ID
+export const getBlogById = async (req: Request, res: Response) => {
+  try {
+    const blogId = req.params.id;
+
+    // Query the database to find the blog post by ID
+    const blog = await Blog.findById(blogId).populate("comments.user");
+
+    // Check if the blog post exists
+    if (!blog) {
+      return res.status(404).json({ message: "Blog post not found" });
+    }
+
+    // If the blog post exists
+    res.status(200).json(blog);
+  } catch (error) {
+    // Handle errors
+    console.error("Error fetching blog post by ID:", error);
+    res.status(500).json({ error: "Internal server error" });
+  }
+};
+
+
+
+
 // Update blog
 export const update = async (req: Request, res: Response) => {
   try {
@@ -81,6 +106,7 @@ export const update = async (req: Request, res: Response) => {
 };
 
 
+
 //deleting blog
 export const deleteUser = async (req:Request, res:Response) => {
   try {
@@ -98,14 +124,13 @@ export const deleteUser = async (req:Request, res:Response) => {
 
 
 
-
 //Adding comment to blog post
 
 
 export const addComment = async (req: Request, res: Response) => {
   try {
-    const { text } = req.body;
-    //  user data is in req.user
+    const { text,username,userEmail } = req.body;
+
     const userId = (req as any).user._id; 
     const blogId = req.params.blogId;
 
@@ -116,17 +141,17 @@ export const addComment = async (req: Request, res: Response) => {
       return res.status(404).json({ message: "Blog post not found" });
     }
 
-
      // Fetch the user's email using their userId
     const user = await User.findById(userId);
-    const userEmail = user?.email
-    console.log(userEmail)
+    // const userEmail = user?.email;
+    console.log(user)
 
 
     // Create a new comment object
     const newComment = {
       user: userId,
-     userEmail,
+      userEmail,
+      username,
       text,
     };
 
@@ -145,10 +170,10 @@ export const addComment = async (req: Request, res: Response) => {
 
 
 
-
 export const likeBlog = async (req: Request, res: Response) => {
   try {
-    const userId = (req as any).user._id; // Assuming user data is in req.user
+    //user data is in req.user
+    const userId = (req as any).user._id; 
     const blogId = req.params.blogId;
 
     // Find the blog post by ID
@@ -169,7 +194,7 @@ export const likeBlog = async (req: Request, res: Response) => {
     } else {
       // Add user ID to likedBy array
       blog.likedBy.push(userId);
-      blog.likes++; // Increment likes count
+      blog.likes++;
     }
 
     // Save the updated blog post
