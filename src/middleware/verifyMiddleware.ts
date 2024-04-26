@@ -24,7 +24,7 @@ export const checkAuthorization = (req: Request, res: Response, next: NextFuncti
       return res.status(401).json({ message: "Invalid access token" });
     }
 
-    if (user.email === "kamali@gmail.com") {
+    if (user.email === "ismael@gmail.com") {
       next();
     } else {
     

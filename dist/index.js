@@ -9,13 +9,44 @@ const dotenv_1 = __importDefault(require("dotenv"));
 const blogRoute_1 = __importDefault(require("./route/blogRoute"));
 const multer_1 = __importDefault(require("./multer"));
 const userRoute_1 = __importDefault(require("./route/userRoute"));
+const cookie_parser_1 = __importDefault(require("cookie-parser"));
+const messageRoute_1 = __importDefault(require("./route/messageRoute"));
+const cors_1 = __importDefault(require("cors"));
+const swagger_jsdoc_1 = __importDefault(require("swagger-jsdoc"));
+const swagger_ui_express_1 = __importDefault(require("swagger-ui-express"));
 const app = (0, express_1.default)();
+const options = {
+    definition: {
+        openapi: "3.0.0",
+        info: {
+            title: "MY BRAND api Doc",
+            version: "1.0.0",
+            description: "This is REST API for my portfolio which I build using Express js and mongoo DB. It has differnt end points such as Users endpoints, Blog CRUD operations endpoints and messaging endpoints",
+            contact: {
+                email: "ismaelmurekezi1@gmail.com",
+            },
+        },
+        servers: [
+            {
+                url: "http://localhost:5000",
+            },
+        ],
+    },
+    apis: ["./src/route/*.ts"],
+};
+const specs = (0, swagger_jsdoc_1.default)(options);
+app.use("/api-docs", swagger_ui_express_1.default.serve, swagger_ui_express_1.default.setup(specs));
 app.use(express_1.default.json());
 app.use(multer_1.default.single('image'));
+app.use((0, cookie_parser_1.default)());
 // app.use('api/blog',route)
+app.use((0, cors_1.default)({
+    origin: 'http://127.0.0.1:5500',
+    credentials: true,
+}));
 dotenv_1.default.config();
 const PORT = parseInt(process.env.PORT || "5000");
-const MONGOURL = process.env.MONGO_URL || "mongodb://localhost:27017/mydatabase";
+const MONGOURL = process.env.MONGO_URL || "mongodb+srv://ishmure:ismael123@cluster0.ty7yfds.mongodb.net/mybrand?retryWrites=true&w=majority&appName=Cluster0";
 mongoose_1.default.connect(MONGOURL).then(() => {
     console.log("Database connected successful");
     app.listen(PORT, () => {
@@ -24,5 +55,9 @@ mongoose_1.default.connect(MONGOURL).then(() => {
 }).catch(error => {
     console.log(error);
 });
+// app.use('/', (req, res) => {
+//   return res.json({message:"Welcome this is Rest API for my brand site "})
+// })
 app.use("/api/blog", blogRoute_1.default);
 app.use("/api/user", userRoute_1.default);
+app.use('/api/messages', messageRoute_1.default);

@@ -1,21 +1,21 @@
+"use strict";
 //MESSAGEROUTE
-
-import express from "express";
-import { createMessage,getAllMessages,deleteMessage,updateMessage,getMessageById } from "../controller/messageController";
-import { authenticateUser } from "../middleware/authmiddleware";
-import { checkAuthorization } from "../middleware/verifyMiddleware";
-
-const routers = express.Router();
-
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
+Object.defineProperty(exports, "__esModule", { value: true });
+const express_1 = __importDefault(require("express"));
+const messageController_1 = require("../controller/messageController");
+const verifyMiddleware_1 = require("../middleware/verifyMiddleware");
+const routers = express_1.default.Router();
 // Route for creating a new message
-
 /**
  * @swagger
  * /api/messages/createMessage:
  *   post:
  *     summary: This API is for sending a message to the Admin dashboard.
  *     description: This API is for sending a message to the Admin dashboard.
- *     tags: 
+ *     tags:
  *       - Message
  *     requestBody:
  *       required: true
@@ -43,17 +43,14 @@ const routers = express.Router();
  *       '500':
  *         description: Internal server error.
  */
-
-
-routers.post("/createMessage", createMessage);
-
+routers.post("/createMessage", messageController_1.createMessage);
 /**
  * @swagger
  * /api/messages/getAllMessages:
  *   get:
  *     summary: This API is for Displaying all message sent.
  *     description: This API is for Displaying all message sent.
- *     tags: 
+ *     tags:
  *       - Message
  *     requestBody:
  *       required: false
@@ -65,16 +62,14 @@ routers.post("/createMessage", createMessage);
  *       '500':
  *         description: Internal server error.
  */
-
-routers.get("/getAllMessages", getAllMessages);
-
+routers.get("/getAllMessages", messageController_1.getAllMessages);
 /**
  * @swagger
  * /api/messages/getMessageById/{id}:
  *   get:
  *     summary: This API is for sending a message to the Admin dashboard.
  *     description: This API is for sending a message to the Admin dashboard.
- *     tags: 
+ *     tags:
  *       - Message
  *     parameters:
  *       - in: path
@@ -93,15 +88,14 @@ routers.get("/getAllMessages", getAllMessages);
  *       '500':
  *         description: Internal server error.
  */
-routers.get("/getMessageById/:id",checkAuthorization,getMessageById);
-
+routers.get("/getMessageById/:id", verifyMiddleware_1.checkAuthorization, messageController_1.getMessageById);
 /**
  * @swagger
  * /api/messages/deleteMessage/{id}:
  *   delete:
  *     summary: This API is removing  any message based on its id.
  *     description:  This API is removing  any message based on its id.
- *     tags: 
+ *     tags:
  *       - Message
  *     parameters:
  *       - in: path
@@ -120,9 +114,6 @@ routers.get("/getMessageById/:id",checkAuthorization,getMessageById);
  *       '500':
  *         description: Internal server error.
  */
-
-routers.delete("/deleteMessage/:id", deleteMessage);
-
-routers.put("/updateMessage/:id", updateMessage);
-
-export default routers;
+routers.delete("/deleteMessage/:id", verifyMiddleware_1.checkAuthorization, messageController_1.deleteMessage);
+routers.put("/updateMessage/:id", verifyMiddleware_1.checkAuthorization, messageController_1.updateMessage);
+exports.default = routers;

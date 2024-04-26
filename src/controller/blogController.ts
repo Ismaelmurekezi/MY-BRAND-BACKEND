@@ -88,7 +88,7 @@ export const update = async (req: Request, res: Response) => {
       return res.status(404).json({ message: "Blog Not found" });
     }
 
-    let updateData = req.body; // Copy the request body
+    let updateData = req.body;
 
     if (req.file) {
       // Upload image to Cloudinary if a new file is provided
