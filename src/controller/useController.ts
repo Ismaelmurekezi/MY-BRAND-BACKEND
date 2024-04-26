@@ -36,7 +36,7 @@ export const register = async (req: Request, res: Response) => {
     });
 
     // Generate tokens
-    const accessToken = jwt.sign({ data: userData }, ACCESS_TOKEN, { expiresIn: "3m" });
+    const accessToken = jwt.sign({ data: userData }, ACCESS_TOKEN, { expiresIn: "1h" });
     const refreshToken = generateRefreshToken(userData);
 
     // Set access token in HTTP-only cookie
@@ -59,7 +59,7 @@ export const login = async (req: Request, res: Response) => {
       const checkPassword = bcrypt.compareSync(password, existUser.password);
 
       if (checkPassword) {
-        const accessToken = jwt.sign({ data: existUser }, ACCESS_TOKEN, { expiresIn: "3m" });
+        const accessToken = jwt.sign({ data: existUser }, ACCESS_TOKEN, { expiresIn: "1h" });
         const refreshToken = generateRefreshToken(existUser);
 
         // Set access token in HTTP-only cookie
@@ -104,7 +104,7 @@ export const logout = async (req: Request, res: Response) => {
 
 // Function to generate access token
  const generateAccessToken = (user: any) => {
-  return jwt.sign({ data: user }, ACCESS_TOKEN, { expiresIn: '3m' });
+  return jwt.sign({ data: user }, ACCESS_TOKEN, { expiresIn: '1h' });
 };
 
 export const refreshToken = async (req: Request, res: Response) => {
