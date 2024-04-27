@@ -49,7 +49,7 @@ app.use(upload.single('image'))
 app.use(cookieParser()); 
 // app.use('api/blog',route)
 app.use(cors({
-  origin: 'https://myportofolio-brand.netlify.app', 
+  origin: ['http://127.0.0.1:5500',' https://myportofolio-brand.netlify.app'],
   // https://myportofolio-brand.netlify.app
     credentials: true, 
 }));
