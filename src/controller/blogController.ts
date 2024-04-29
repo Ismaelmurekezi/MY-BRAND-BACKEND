@@ -32,6 +32,7 @@ export const create = async (req:Request, res:Response) => {
 
     const savedBlog = await blogData.save();
     res.status(201).json(savedBlog);
+
   } catch (error) {
      console.log(error)
     res.status(500).json({ error: "Internal server error" });

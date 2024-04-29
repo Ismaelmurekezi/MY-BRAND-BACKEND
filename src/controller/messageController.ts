@@ -23,6 +23,7 @@ export const createMessage = async (req: Request, res: Response) => {
 export const getAllMessages = async (req: Request, res: Response) => {
     try {
         const messages = await Message.find();
+        console.log(req.url)
         res.status(200).json(messages);
     } catch (error) {
         console.error(error);

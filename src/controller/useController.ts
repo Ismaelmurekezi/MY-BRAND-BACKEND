@@ -1,6 +1,4 @@
 
-
-
 import { Request, Response } from "express";
 import User from "../model/userModel";
 import bcrypt from "bcrypt";

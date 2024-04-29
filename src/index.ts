@@ -2,11 +2,11 @@
 import express from "express";
 import mongoose from "mongoose";
 import dotenv from 'dotenv';
-import route from "./route/blogRoute";
 import upload from "./multer";
+import route from "./route/blogRoute";
 import router from "./route/userRoute";
-import cookieParser from "cookie-parser";
 import routers from "./route/messageRoute";
+import cookieParser from "cookie-parser";
 import cors from "cors"
 import swaggerJSDoc from "swagger-jsdoc"
 import swaggerUI from "swagger-ui-express"
@@ -49,7 +49,7 @@ app.use(upload.single('image'))
 app.use(cookieParser()); 
 // app.use('api/blog',route)
 app.use(cors({
-  origin: ['http://127.0.0.1:5500',' https://myportofolio-brand.netlify.app'],
+  origin: ['http://127.0.0.1:5500',' https://myportofolio-brand.netlify.app','http://localhost:3000'],
   // https://myportofolio-brand.netlify.app
     credentials: true, 
 }));
