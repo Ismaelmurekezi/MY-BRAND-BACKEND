@@ -32,6 +32,43 @@ const blogSchema = new mongoose_1.default.Schema({
     image: {
         type: String,
         required: true
+    },
+    likes: {
+        type: Number,
+        default: 0
+    },
+    likedBy: [
+        {
+            type: mongoose_1.default.Schema.Types.ObjectId,
+            ref: "User",
+        },
+    ],
+    // comments: [commentSchema]
+    comments: [
+        {
+            user: {
+                type: mongoose_1.default.Schema.Types.ObjectId,
+                ref: "User",
+            },
+            userEmail: {
+                type: String,
+            },
+            username: {
+                type: String,
+            },
+            text: {
+                type: String,
+                required: false,
+            },
+            createdAt: {
+                type: Date,
+                default: Date.now,
+            },
+        },
+    ],
+    createdAt: {
+        type: Date,
+        default: Date.now,
     }
 });
-exports.default = mongoose_1.default.model("blogs", blogSchema);
+exports.default = mongoose_1.default.model("Blog", blogSchema);

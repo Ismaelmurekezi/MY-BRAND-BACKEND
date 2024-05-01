@@ -1,15 +1,39 @@
 import express, { Request, Response } from "express"
 import Message from "../model/messageModel"
+import nodemailer from "nodemailer"
+
+
+// Create a transporter using SMTP transport
+const transporter = nodemailer.createTransport({
+  service: 'gmail',
+  auth: {
+    user: process.env.EMAIL, 
+    pass: process.env.PASSWORD, 
+  },
+});
 
 
 // Controller function to create a new message
 export const createMessage = async (req: Request, res: Response) => {
     try {
         const { username, email, message } = req.body;
-
+        
+     console.log(req.body.email)
         // Create a new message document
         const newMessage = new Message({ username, email, message });
         await newMessage.save();
+
+     await transporter.sendMail({
+      from: process.env.EMAIL, 
+         to: process.env.EMAIL, 
+         replyTo: email, 
+      subject: 'New message from user',
+      text: `
+        Username: ${username}
+        Email: ${email}
+        Message: ${message}
+      `,
+    });
 
         res.status(201).json(newMessage);
     } catch (error) {

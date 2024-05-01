@@ -12,9 +12,10 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.deleteUser = exports.update = exports.fetch = exports.create = void 0;
-const cloudinary_1 = __importDefault(require("../cloudinary"));
+exports.likeBlog = exports.addComment = exports.deleteUser = exports.update = exports.getBlogById = exports.fetch = exports.create = void 0;
 const blogModel_1 = __importDefault(require("../model/blogModel"));
+const cloudinary_1 = __importDefault(require("../cloudinary"));
+const userModel_1 = __importDefault(require("../model/userModel"));
 //Creating blog post
 const create = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
@@ -42,7 +43,8 @@ exports.create = create;
 //Getting blog post
 const fetch = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
-        const blogs = yield blogModel_1.default.find();
+        const blogs = yield blogModel_1.default.find().populate("comments.user");
+        ;
         if (blogs.length === 0) {
             return res.status(404).json({ message: "Blog not found" });
         }
@@ -53,6 +55,26 @@ const fetch = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     }
 });
 exports.fetch = fetch;
+// Controller function to fetch a single blog post by ID
+const getBlogById = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    try {
+        const blogId = req.params.id;
+        // Query the database to find the blog post by ID
+        const blog = yield blogModel_1.default.findById(blogId).populate("comments.user");
+        // Check if the blog post exists
+        if (!blog) {
+            return res.status(404).json({ message: "Blog post not found" });
+        }
+        // If the blog post exists
+        res.status(200).json(blog);
+    }
+    catch (error) {
+        // Handle errors
+        console.error("Error fetching blog post by ID:", error);
+        res.status(500).json({ error: "Internal server error" });
+    }
+});
+exports.getBlogById = getBlogById;
 // Update blog
 const update = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
@@ -93,3 +115,69 @@ const deleteUser = (req, res) => __awaiter(void 0, void 0, void 0, function* () 
     }
 });
 exports.deleteUser = deleteUser;
+//Adding comment to blog post
+const addComment = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    try {
+        const { text, username, userEmail } = req.body;
+        const userId = req.user._id;
+        const blogId = req.params.blogId;
+        // Find the blog post by ID
+        const blog = yield blogModel_1.default.findById(blogId);
+        if (!blog) {
+            return res.status(404).json({ message: "Blog post not found" });
+        }
+        // Fetch the user's email using their userId
+        const user = yield userModel_1.default.findById(userId);
+        // const userEmail = user?.email;
+        console.log(user);
+        // Create a new comment object
+        const newComment = {
+            user: userId,
+            userEmail,
+            username,
+            text,
+        };
+        // Add the comment to the blog post
+        blog.comments.push(newComment);
+        // Save the updated blog post
+        const updatedBlog = yield blog.save();
+        res.status(200).json({ message: "Comment added successfully", blog: updatedBlog });
+    }
+    catch (error) {
+        console.error(error);
+        res.status(500).json({ error: "Internal server error" });
+    }
+});
+exports.addComment = addComment;
+const likeBlog = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    try {
+        //user data is in req.user
+        const userId = req.user._id;
+        const blogId = req.params.blogId;
+        // Find the blog post by ID
+        const blog = yield blogModel_1.default.findById(blogId);
+        if (!blog) {
+            return res.status(404).json({ message: "Blog post not found" });
+        }
+        // Check if user already liked the post
+        const alreadyLiked = blog.likedBy.includes(userId);
+        if (alreadyLiked) {
+            // Removing like 
+            blog.likedBy = blog.likedBy.filter(id => id.toString() !== userId.toString());
+            blog.likes > 0 ? blog.likes-- : blog.likes = 0;
+        }
+        else {
+            // Add user ID to likedBy array
+            blog.likedBy.push(userId);
+            blog.likes++;
+        }
+        // Save the updated blog post
+        const updatedBlog = yield blog.save();
+        res.status(200).json({ message: alreadyLiked ? "Unliked" : "Liked", blog: updatedBlog });
+    }
+    catch (error) {
+        console.error(error);
+        res.status(500).json({ error: "Internal server error" });
+    }
+});
+exports.likeBlog = likeBlog;

@@ -113,7 +113,7 @@ router.get("/getAllBlogs", fetch);
 router.post("/create",checkAuthorization,create);
 
 
-router.get('/getBlogById/:id', getBlogById)
+router.get('/getBlogById/:id',getBlogById)
 /**
  * @swagger
  * /api/blog/update/{id}:

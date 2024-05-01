@@ -13,6 +13,12 @@ import swaggerUI from "swagger-ui-express"
 
 const app = express();
 
+app.use(cors({
+  origin: ['http://127.0.0.1:5500', 'https://myportofolio-brand.netlify.app','http://localhost:3000'], 
+  // https://myportofolio-brand.netlify.app
+    credentials: true, 
+}));
+
  const options: any = {
   definition: {
     openapi: "3.0.0",
@@ -48,11 +54,7 @@ app.use(express.json());
 app.use(upload.single('image'))
 app.use(cookieParser()); 
 // app.use('api/blog',route)
-app.use(cors({
-  origin: 'https://myportofolio-brand.netlify.app', 
-  // https://myportofolio-brand.netlify.app
-    credentials: true, 
-}));
+
 
 
 dotenv.config();
@@ -69,9 +71,9 @@ mongoose.connect(MONGOURL).then(() => {
 })   .catch(error => {
         console.log(error)
 })
-app.use('/', (req, res) => {
-  return res.json({ message: "Welcome this is Rest API for my brand site " });
-});
+// app.use('/', (req, res) => {
+//   return res.json({ message: "Welcome this is Rest Cannot GET /api/messages/getAllBlogsAPI for my brand site " });
+// });
 app.use("/api/blog", route);
 app.use("/api/user", router);
 app.use('/api/messages',routers)
