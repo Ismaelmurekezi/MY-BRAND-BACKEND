@@ -1,5 +1,5 @@
 
-import express from "express";
+import express, { Request, Response } from "express"
 import mongoose from "mongoose";
 import dotenv from 'dotenv';
 import upload from "./multer";
@@ -69,6 +69,9 @@ mongoose.connect(MONGOURL).then(() => {
 })   .catch(error => {
         console.log(error)
 })
+ app.use('/', (req, res) => {
+   return res.json({message:"Welcome this is Rest API for my brand site "})
+ })
 app.use("/api/blog", route);
 app.use("/api/user", router);
 app.use('/api/messages',routers)
