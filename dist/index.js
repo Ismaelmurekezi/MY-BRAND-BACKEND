@@ -55,9 +55,9 @@ mongoose_1.default.connect(MONGOURL).then(() => {
 }).catch(error => {
     console.log(error);
 });
-app.use('/', (req, res) => {
-    return res.json({ message: "Welcome this is Rest API for my brand site " });
-});
+// app.use('/', (req, res) => {
+//     return res.json({ message: "Welcome this is Rest API for my brand site " });
+// });
 app.use("/api/blog", blogRoute_1.default);
 app.use("/api/user", userRoute_1.default);
 app.use('/api/messages', messageRoute_1.default);
