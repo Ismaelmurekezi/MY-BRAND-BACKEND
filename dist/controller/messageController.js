@@ -54,6 +54,7 @@ exports.createMessage = createMessage;
 const getAllMessages = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         const messages = yield messageModel_1.default.find();
+        console.log(req.url);
         res.status(200).json(messages);
     }
     catch (error) {

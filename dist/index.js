@@ -6,18 +6,17 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const express_1 = __importDefault(require("express"));
 const mongoose_1 = __importDefault(require("mongoose"));
 const dotenv_1 = __importDefault(require("dotenv"));
-const blogRoute_1 = __importDefault(require("./route/blogRoute"));
 const multer_1 = __importDefault(require("./multer"));
+const blogRoute_1 = __importDefault(require("./route/blogRoute"));
 const userRoute_1 = __importDefault(require("./route/userRoute"));
-const cookie_parser_1 = __importDefault(require("cookie-parser"));
 const messageRoute_1 = __importDefault(require("./route/messageRoute"));
+const cookie_parser_1 = __importDefault(require("cookie-parser"));
 const cors_1 = __importDefault(require("cors"));
 const swagger_jsdoc_1 = __importDefault(require("swagger-jsdoc"));
 const swagger_ui_express_1 = __importDefault(require("swagger-ui-express"));
 const app = (0, express_1.default)();
 app.use((0, cors_1.default)({
-    origin: ['http://127.0.0.1:5500', 'https://myportofolio-brand.netlify.app', 'http://localhost:3000'],
-    // https://myportofolio-brand.netlify.app
+    origin: ['http://127.0.0.1:5500', 'https://myportofolio-brand.netlify.app', 'http://localhost:3000', 'http://localhost:5173'],
     credentials: true,
 }));
 const options = {
@@ -56,9 +55,9 @@ mongoose_1.default.connect(MONGOURL).then(() => {
 }).catch(error => {
     console.log(error);
 });
-// app.use('/', (req, res) => {
-//   return res.json({ message: "Welcome this is Rest Cannot GET /api/messages/getAllBlogsAPI for my brand site " });
-// });
+app.use('/', (req, res) => {
+    return res.json({ message: "Welcome this is Rest API for my brand site " });
+});
 app.use("/api/blog", blogRoute_1.default);
 app.use("/api/user", userRoute_1.default);
 app.use('/api/messages', messageRoute_1.default);
