@@ -34,6 +34,9 @@ app.use(cors({
       {
         url: "https://my-brand-backend-ibtm.onrender.com",
       },
+       {
+        url: "http://localhost:5000",
+      },
     ],
   },
   apis: ["./src/route/*.ts"],
@@ -70,7 +73,7 @@ mongoose.connect(MONGOURL).then(() => {
         console.log(error)
 })
  app.get('/', (req, res) => {
-   return res.send({message:"Welcome this is Rest API for my brand site "})
+   return res.send("Welcome this is Rest API for my brand site ")
  })
 app.use("/api/blog", route);
 app.use("/api/user", router);
