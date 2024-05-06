@@ -69,8 +69,8 @@ mongoose.connect(MONGOURL).then(() => {
 })   .catch(error => {
         console.log(error)
 })
- app.use('/', (req, res) => {
-   return res.json({message:"Welcome this is Rest API for my brand site "})
+ app.get('/', (req, res) => {
+   return res.send({message:"Welcome this is Rest API for my brand site "})
  })
 app.use("/api/blog", route);
 app.use("/api/user", router);
