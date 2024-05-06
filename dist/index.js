@@ -16,7 +16,7 @@ const swagger_jsdoc_1 = __importDefault(require("swagger-jsdoc"));
 const swagger_ui_express_1 = __importDefault(require("swagger-ui-express"));
 const app = (0, express_1.default)();
 app.use((0, cors_1.default)({
-    origin: ['http://127.0.0.1:5500', 'https://myportofolio-brand.netlify.app', 'http://localhost:3000', 'http://localhost:5173'],
+    origin: ['http://127.0.0.1:5500', 'https://myportofolio-brand.netlify.app', 'http://localhost:3000', 'http://localhost:5173', 'https://my-brand-backend-ibtm.onrender.com'],
     credentials: true,
 }));
 const options = {
@@ -31,6 +31,9 @@ const options = {
             },
         },
         servers: [
+            {
+                url: "https://my-brand-backend-ibtm.onrender.com",
+            },
             {
                 url: "http://localhost:5000",
             },
@@ -55,9 +58,9 @@ mongoose_1.default.connect(MONGOURL).then(() => {
 }).catch(error => {
     console.log(error);
 });
-// app.use('/', (req, res) => {
-//     return res.json({ message: "Welcome this is Rest API for my brand site " });
-// });
+app.get('/', (req, res) => {
+    return res.send("Welcome this is Rest API for my brand site ");
+});
 app.use("/api/blog", blogRoute_1.default);
 app.use("/api/user", userRoute_1.default);
 app.use('/api/messages', messageRoute_1.default);
