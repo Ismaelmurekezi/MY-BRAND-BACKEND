@@ -32,7 +32,7 @@ app.use(cors({
     },
     servers: [
       {
-        url: "http://localhost:5000",
+        url: "https://my-brand-backend-ibtm.onrender.com",
       },
     ],
   },
