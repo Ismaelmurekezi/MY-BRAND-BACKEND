@@ -1,5 +1,7 @@
 import express from "express"
-import { login, register,refreshToken, logout } from "../controller/useController"
+import { login, register,refreshToken, logout, getAllUsers, getUserById, updateUserById, deleteUser } from "../controller/useController"
+
+
 
 
 const router = express.Router()
@@ -76,7 +78,11 @@ router.post("/register", register)
  */
 
 router.post("/login", login)
-router.post('/logout',logout)
+router.post('/logout', logout)
+router.get("/getAllUsers", getAllUsers);
+router.get("/getUserById/:id", getUserById);
+router.put("/updateUserById/:id", updateUserById);
+router.delete("/deleteUser/:id", deleteUser);
 router.post('/refresh-token', refreshToken);
 
 export default router

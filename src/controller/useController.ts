@@ -100,6 +100,101 @@ export const logout = async (req: Request, res: Response) => {
 
 
 
+// Controller function to get all registered users
+export const getAllUsers = async (req: Request, res: Response) => {
+  try {
+
+
+        const page = parseInt(req.query.page as string) || 1; 
+        const perPage = 4; 
+        const skip = (page - 1) * perPage; 
+
+    const users = await User.find().skip(skip).limit(perPage); 
+    
+    // const users = await User.find();
+
+    if (users.length === 0) {
+      return res.status(404).json({ message: "No users found" });
+    }
+
+    // Send the list of users as a response
+    res.status(200).json(users);
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: "Internal server error" });
+  }
+};
+
+// Function to get user to be edited  
+export const getUserById = async (req: Request, res: Response) => {
+    try {
+   
+        const userId = req.params.id;
+
+        const user = await User.findById(userId);
+
+        if (!user) {
+            return res.status(404).json({ message: "User not found" });
+        }
+        res.status(200).json(user);
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ error: "Internal server error" });
+    }
+};
+
+
+// Controller function to delete a user by ID
+export const deleteUser = async (req: Request, res: Response) => {
+    try {
+        const { id } = req.params;
+
+        // Find the message by ID and delete it
+        await User.findByIdAndDelete(id);
+
+        res.status(200).json({ message: "User deleted successfully" });
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ error: "Internal server error" });
+    }
+};
+
+// Controller function to update user information by ID
+export const updateUserById = async (req: Request, res: Response) => {
+  try {
+    const userId = req.params.id;
+    const { username, email, password } = req.body;
+
+    // Check if the user exists
+    const user = await User.findById(userId);
+    if (!user) {
+      return res.status(404).json({ message: "User not found" });
+    }
+
+    // Update user data
+    if (username) user.username = username;
+    if (email) user.email = email;
+    if (password) {
+      // Hash the new password
+      const hashedPassword = bcrypt.hashSync(password, 10);
+      user.password = hashedPassword;
+    }
+
+    // Save the updated user data
+    await user.save();
+
+    // Send response
+    res.status(200).json({ message: "User updated successfully", user });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: "Internal server error" });
+  }
+};
+
+
+
+
+
 // Function to generate access token
  const generateAccessToken = (user: any) => {
   return jwt.sign({ data: user }, ACCESS_TOKEN, { expiresIn: '1h' });
