@@ -1,7 +1,7 @@
 
 import { Request, Response } from "express";
 import User from "../model/userModel";
-import bcrypt from "bcrypt";
+import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
 
 const ACCESS_TOKEN: string = process.env.ACCESS_TOKEN || "";
@@ -210,10 +210,8 @@ export const refreshToken = async (req: Request, res: Response) => {
       return res.status(401).json({ message: 'Refresh token missing' });
     }
 
-    // Verify refresh token
     const decodedToken: any = jwt.verify(refreshToken, REFRESH_TOKEN_SECRET);
 
-    // Generate a new access token
     const newAccessToken = generateAccessToken(decodedToken.data);
 
     // Set the new access token in the cookie
