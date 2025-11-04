@@ -61,10 +61,12 @@ app.use(cookieParser());
 
 dotenv.config();
 const PORT = parseInt(process.env.PORT || "5000");
-const MONGOURL =
-  process.env.MONGO_URL ||
-  "mongodb+srv://ishmure:ismael123@cluster0.ty7yfds.mongodb.net/mybrand?retryWrites=true&w=majority&appName=Cluster0";
+const MONGOURL = process.env.MONGO_URL;
 
+if (!MONGOURL) {
+  console.error("MONGO_URL environment variable is not defined");
+  process.exit(1);
+}
 mongoose
   .connect(MONGOURL)
   .then(() => {
