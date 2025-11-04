@@ -16,7 +16,14 @@ const swagger_jsdoc_1 = __importDefault(require("swagger-jsdoc"));
 const swagger_ui_express_1 = __importDefault(require("swagger-ui-express"));
 const app = (0, express_1.default)();
 app.use((0, cors_1.default)({
-    origin: ['http://127.0.0.1:5500', 'https://myportofolio-brand.netlify.app', 'http://localhost:3000', 'http://localhost:5173', 'https://my-brand-backend-ibtm.onrender.com'],
+    origin: [
+        "http://127.0.0.1:5500",
+        "https://myportofolio-brand.netlify.app",
+        "http://localhost:3000",
+        "http://localhost:5173",
+        "https://my-brand-backend-ibtm.onrender.com",
+        "https://brandporto.netlify.app/",
+    ],
     credentials: true,
 }));
 const options = {
@@ -44,23 +51,30 @@ const options = {
 const specs = (0, swagger_jsdoc_1.default)(options);
 app.use("/api-docs", swagger_ui_express_1.default.serve, swagger_ui_express_1.default.setup(specs));
 app.use(express_1.default.json());
-app.use(multer_1.default.single('image'));
+app.use(multer_1.default.single("image"));
 app.use((0, cookie_parser_1.default)());
 // app.use('api/blog',route)
 dotenv_1.default.config();
 const PORT = parseInt(process.env.PORT || "5000");
-const MONGOURL = process.env.MONGO_URL || "mongodb+srv://ishmure:ismael123@cluster0.ty7yfds.mongodb.net/mybrand?retryWrites=true&w=majority&appName=Cluster0";
-mongoose_1.default.connect(MONGOURL).then(() => {
+const MONGOURL = process.env.MONGO_URL;
+if (!MONGOURL) {
+    console.error("MONGO_URL environment variable is not defined");
+    process.exit(1);
+}
+mongoose_1.default
+    .connect(MONGOURL)
+    .then(() => {
     console.log("Database connected successful");
     app.listen(PORT, () => {
         console.log(`Server is running on port ${PORT}`);
     });
-}).catch(error => {
+})
+    .catch((error) => {
     console.log(error);
 });
-app.get('/', (req, res) => {
+app.get("/", (req, res) => {
     return res.send("Welcome this is Rest API for my brand site ");
 });
 app.use("/api/blog", blogRoute_1.default);
 app.use("/api/user", userRoute_1.default);
-app.use('/api/messages', messageRoute_1.default);
+app.use("/api/messages", messageRoute_1.default);

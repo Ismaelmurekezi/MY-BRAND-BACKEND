@@ -75,5 +75,9 @@ router.post("/register", useController_1.register);
  */
 router.post("/login", useController_1.login);
 router.post('/logout', useController_1.logout);
+router.get("/getAllUsers", useController_1.getAllUsers);
+router.get("/getUserById/:id", useController_1.getUserById);
+router.put("/updateUserById/:id", useController_1.updateUserById);
+router.delete("/deleteUser/:id", useController_1.deleteUser);
 router.post('/refresh-token', useController_1.refreshToken);
 exports.default = router;

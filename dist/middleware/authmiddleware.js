@@ -7,8 +7,7 @@ exports.authenticateUser = void 0;
 const jsonwebtoken_1 = __importDefault(require("jsonwebtoken"));
 const ACCESS_TOKEN_SECRET = process.env.ACCESS_TOKEN || "";
 const authenticateUser = (req, res, next) => {
-    var _a;
-    const accessToken = (_a = req.headers.authorization) === null || _a === void 0 ? void 0 : _a.split(" ")[1];
+    const accessToken = req.headers.authorization?.split(" ")[1];
     // const accessToken = req.cookies.access_token;
     if (!accessToken) {
         return res.status(401).json({ message: "Access token not provided" });
