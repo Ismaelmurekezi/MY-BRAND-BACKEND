@@ -20,7 +20,7 @@ app.use(
       "http://localhost:3000",
       "http://localhost:5173",
       "https://my-brand-backend-ibtm.onrender.com",
-      "https://brandporto.netlify.app/",
+      "https://brandporto.netlify.app",
     ],
     credentials: true,
   })
